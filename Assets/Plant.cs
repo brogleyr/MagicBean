@@ -4,10 +4,20 @@ using UnityEngine;
 
 public class Plant : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    bool isMagicBean;
+    int beanCount = 0;
+    
+    void Start() {
+        isMagicBean = GrowthManager.Instance.GetMagicBean();
+
+        if (isMagicBean) {
+            // Instantiate a magic bean as a child
+        }
+        else {
+            beanCount = GrowthManager.Instance.GetBeanCount();
+            //Instantiate
+            
+        }
     }
 
     void ActivateBean() {

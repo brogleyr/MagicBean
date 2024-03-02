@@ -5,11 +5,11 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    float speed = 2.0f;
+    float speed = 4.0f;
 
     Vector3 lastPos;
     float travelDistance = 0.0f;
-    float plantInterval = 5.0f;
+    float plantInterval = 10.0f;
 
     [SerializeField]
     GameObject plantPrefab;
@@ -31,14 +31,15 @@ public class Player : MonoBehaviour
             Instantiate(plantPrefab, transform.position, Quaternion.identity);
             travelDistance = 0.0f;
         }
-        // Update lastPos
 
 
 
-        float xInput = Input.GetAxis("Horizontal");
-        float yInput = Input.GetAxis("Vertical");
-        Vector2 inputDir = new Vector2(xInput, yInput);
-        inputDir.Normalize();
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 dirToMouse = mouseWorldPos - transform.position;
+        Vector2 inputDir = new Vector2(dirToMouse.x, dirToMouse.y);
+        if (inputDir.magnitude > 1) {
+            inputDir.Normalize();
+        } 
 
         GetComponent<Rigidbody2D>().velocity = inputDir * speed;
     }
