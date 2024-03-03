@@ -45,6 +45,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: MagicBean
+    uniqueID: 429426915
+    locked: 0
   - name: Player
     uniqueID: 3549907611
     locked: 0

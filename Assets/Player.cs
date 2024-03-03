@@ -32,11 +32,20 @@ public class Player : MonoBehaviour
             travelDistance = 0.0f;
         }
 
+        // float xInput = Input.GetAxis("Horizontal");
+        // float yInput = Input.GetAxis("Vertical");
+        // Vector2 inputDir = new Vector2(xInput, yInput);
+        // inputDir.Normalize();
 
+        // GetComponent<Rigidbody2D>().velocity = inputDir * speed;
 
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 dirToMouse = mouseWorldPos - transform.position;
-        Vector2 inputDir = new Vector2(dirToMouse.x, dirToMouse.y);
+        float xInput = Input.GetAxis("Horizontal");
+        float yInput = Input.GetAxis("Vertical");
+        Vector2 inputDir = new Vector2(xInput, yInput);
+        //Vector2 inputDir = new Vector2(dirToMouse.x, dirToMouse.y);
+    
         if (inputDir.magnitude > 1) {
             inputDir.Normalize();
         } 
