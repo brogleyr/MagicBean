@@ -35,6 +35,8 @@ public class Plant : MonoBehaviour
                 newBean.SetActive(false);
             }
         }
+
+        SetSpeed();
     }
 
     void ActivateBean() {
@@ -46,6 +48,10 @@ public class Plant : MonoBehaviour
 
     public void DestroyBean(GameObject bean) {
         Destroy(bean);
+    }
+
+    void SetSpeed() {
+        GetComponent<Animator>().speed = Random.Range(0.04f, 0.08f);
     }
 
     void Update() {
