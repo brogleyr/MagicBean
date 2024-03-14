@@ -14,9 +14,9 @@ public class Player : MonoBehaviour
     GameObject plantPrefab;
 
     Animator animator;
+    Animator spriteAnimator;
 
     bool inAir = false;
-    bool rejump = false;
     public int jumpCount = 0;
 
     [SerializeField]
@@ -26,15 +26,20 @@ public class Player : MonoBehaviour
     {
         Vector3 lastPos = transform.position;
         animator = GetComponent<Animator>();
+        spriteAnimator = transform.GetChild(0).GetComponent<Animator>();
     }
 
     void Update() {
-        float xInput = 0, yInput = 0;
+        int xInput = 0, yInput = 0;
         if (Input.GetKey("w")) yInput += 1;
         if (Input.GetKey("a")) xInput -= 1;
         if (Input.GetKey("s")) yInput -= 1;
         if (Input.GetKey("d")) xInput += 1;
-        inputDir = new Vector2(xInput, yInput);
+
+        spriteAnimator.SetInteger("InputX", xInput);
+        spriteAnimator.SetInteger("InputY", yInput);
+
+        inputDir = new Vector2((float) xInput, (float) yInput);
         if (inputDir.magnitude > 1) {
             inputDir.Normalize();
         }
@@ -42,9 +47,15 @@ public class Player : MonoBehaviour
         if (inputDir.magnitude > 0) {
             animator.SetBool("UserInput", true);
         }
+        else {
+            animator.SetBool("UserInput", false);
+        }
 
         if (!inAir && Input.GetKey("space")) {
-            Jump();
+            animator.SetBool("JumpInput", true);
+        }
+        else {
+            animator.SetBool("JumpInput", false);
         }
     }
 
@@ -57,31 +68,29 @@ public class Player : MonoBehaviour
         inAir = true;
         jumpCount += 1;
         SetPlantCollisions(false);
-        animator.SetTrigger("Jump");
+        animator.SetBool("OnPlant", false);
     }
 
     public void Land() {
         inAir = false;
         SetPlantCollisions(true);
         if (IsTouchingPlant()) {
-            rejump = true;
+            animator.SetBool("OnPlant", true);
         }
         else {
             PlantSprouts(jumpCount * Mathf.Max(1, Bank.Instance.MagicBeans));
-            rejump = false;
+            animator.SetBool("OnPlant", false);
             jumpCount = 0;
-        }
-    }
-
-    public void Rejump() {
-        if (rejump) {
-            Jump();
         }
     }
 
     void PlantSprouts(int plantCount) {
         float radius = Mathf.Sqrt(plantCount / density);
         for (int i = 0; i < plantCount; i++) {
+            if (i == 0) {
+                Instantiate(plantPrefab, transform.position, Quaternion.identity);
+                continue;
+            }
             float dist = Mathf.Sqrt(Random.Range(0f, radius * radius));
             float angle = Random.Range(0f, 360f);
             Vector3 displacement = Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(dist, 0f, 0f);
