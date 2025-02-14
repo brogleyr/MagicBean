@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     float density = 1f;
 
+    [SerializeField]
+    TextMeshPro comboText;
+
     void Start()
     {
         Vector3 lastPos = transform.position;
@@ -57,6 +60,8 @@ public class Player : MonoBehaviour
         else {
             animator.SetBool("JumpInput", false);
         }
+
+        UpdateCombo();
     }
 
     void FixedUpdate()
@@ -113,5 +118,17 @@ public class Player : MonoBehaviour
         filter.layerMask = LayerMask.GetMask("Plant");
         GetComponent<Collider2D>().OverlapCollider(filter, contacts);
         return contacts.Count > 0;
+    }
+
+    void UpdateCombo() {
+        if (jumpCount < 3) {
+            comboText.text = "";
+        }
+        else if (Bank.Instance.MagicBeans < 2) {
+            comboText.text = jumpCount.ToString();
+        }
+        else {
+            comboText.text = jumpCount.ToString() + "x" + Bank.Instance.MagicBeans.ToString();
+        }
     }
 }
